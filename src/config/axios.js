@@ -6,6 +6,7 @@ const defaultInstance = axios.create({
 });
 
 defaultInstance.defaults.headers['content-type'] = 'application/json';
+defaultInstance.defaults.headers['Access-Control-Allow-Origin'] = '*';
 
 defaultInstance.interceptors.response.use(
     (response) => response,

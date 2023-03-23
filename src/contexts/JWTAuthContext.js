@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from 'react';
+import { useNavigate } from 'react-router';
 import axios from '../config/axios';
 import PropTypes from 'prop-types';
 import { getAccessToken, setAccessToken, setSession } from '../config/token';
@@ -61,6 +62,7 @@ const AuthContext = createContext({
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
+    const navigate = useNavigate();
     const [state, dispatch] = useReducer(reducer, initialAuthState);
 
     useEffect(() => {
@@ -69,7 +71,7 @@ export const AuthProvider = ({ children }) => {
                 const accessToken = getAccessToken();
                 if (accessToken) {
                     setSession(accessToken);
-                    const response = await axios.get('/api/auth/profile');
+                    const response = await axios.get('/login');
                     const { user } = response.data;
 
                     dispatch({
@@ -104,10 +106,11 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
+            const response = await axios.post('/login', { email, password });
             const { accessToken, user } = response.data;
 
             setSession(accessToken);
+            navigate('/dashboard/default');
             dispatch({
                 type: 'LOGIN',
                 payload: {
@@ -116,19 +119,20 @@ export const AuthProvider = ({ children }) => {
             });
         } catch (err) {
             console.error(err);
-            throw err;
+            navigate('/session/signin');
         }
     };
 
     const logout = async () => {
         setSession(null);
+        navigate('/session/signin');
         dispatch({
             type: 'LOGOUT'
         });
     };
 
     const register = async (email, firstName, lastName, password) => {
-        const response = await axios.post('/api/auth/register', { email, firstName, lastName, password });
+        const response = await axios.post('/signup', { email, firstName, lastName, password });
         const { accessToken, user } = response.data;
         setAccessToken(accessToken);
         dispatch({
