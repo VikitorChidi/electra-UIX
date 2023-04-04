@@ -14,6 +14,11 @@ const App = () => (
             </ScrollTop>
         </ThemeCustomization>
     </AuthProvider>
+    // <ThemeCustomization>
+    //     <ScrollTop>
+    //         <Routes />
+    //     </ScrollTop>
+    // </ThemeCustomization>
 );
 
 export default App;

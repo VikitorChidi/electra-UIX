@@ -12,17 +12,17 @@ export const isValidToken = (accessToken) => {
 
 export const setSession = (accessToken) => {
     if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('erToken', accessToken);
         axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     } else {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('erToken');
         delete axios.defaults.headers.common.Authorization;
     }
 };
 
-export const getTemporarySession = () => window.sessionStorage.getItem('accessToken');
+export const getTemporarySession = () => window.sessionStorage.getItem('erToken');
 
-export const getSession = () => window.localStorage.getItem('accessToken');
+export const getSession = () => window.localStorage.getItem('erToken');
 
 export const getAccessToken = () => getSession() ?? getTemporarySession();
 

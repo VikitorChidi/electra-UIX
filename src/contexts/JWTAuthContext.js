@@ -1,166 +1,101 @@
-import { createContext, useEffect, useReducer } from 'react';
-import { useNavigate } from 'react-router';
+import { createContext, useEffect } from 'react';
 import axios from '../config/axios';
-import PropTypes from 'prop-types';
-import { getAccessToken, setAccessToken, setSession } from '../config/token';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import useClosableSnackbar from '../hook/useClosableSnackbar';
+import { setAuthenticated, setLoading, setUser } from '../store/reducers/auth';
+import { getAccessToken, setSession } from '../config/token';
+import { loginAuth } from '../pages/authentication/authService';
+import jwtDecode from 'jwt-decode';
 
-const initialAuthState = {
-    isAuthenticated: false,
-    isInitialized: false,
-    user: null
+export const setAuthHeader = (token) => {
+    if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    else delete axios.defaults.headers.common['Authorization'];
 };
-
-const handlers = {
-    INITIALIZE: (state, action) => {
-        const { isAuthenticated, user } = action.payload;
-
-        return {
-            ...state,
-            isAuthenticated,
-            isInitialized: true,
-            user
-        };
-    },
-
-    LOGIN: (state, action) => {
-        const { user } = action.payload;
-
-        return {
-            ...state,
-            isAuthenticated: true,
-            user
-        };
-    },
-
-    LOGOUT: (state) => ({
-        ...state,
-        isAuthenticated: false,
-        user: null
-    }),
-
-    REGISTER: (state, action) => {
-        const { user } = action.payload;
-
-        return {
-            ...state,
-            isAuthenticated: true,
-            user
-        };
-    }
-};
-
-const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
 
 const AuthContext = createContext({
-    ...initialAuthState,
     method: 'JWT',
     login: () => Promise.resolve(),
-    logout: () => Promise.resolve(),
-    register: () => Promise.resolve(),
-    dispatchUser: () => Promise.resolve()
+    logout: {}
 });
 
-// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [state, dispatch] = useReducer(reducer, initialAuthState);
+    const { enqueueSnackbar } = useClosableSnackbar();
+
+    const handleAuthSuccess = (user, token, toDashboard = true) => {
+        setLoading(false);
+        dispatch(setUser(user));
+        dispatch(setAuthenticated(true));
+        setSession(token);
+        setAuthHeader(token);
+        if (toDashboard) navigate('/dashboard/default');
+    };
+
+    const handleAuthFailure = (toWelcomeRoute = true) => {
+        dispatch(setLoading(false));
+        dispatch(setAuthenticated(false));
+        setAuthHeader(null);
+        if (toWelcomeRoute) navigate('/welcome');
+    };
+
+    const login = ({ username, password }) => {
+        dispatch(setLoading(true));
+        loginAuth({ username, password })
+            .then((res) => {
+                const { token } = res.data;
+                const decodedToken = jwtDecode(token);
+                const { sub } = decodedToken;
+                const user = { sub };
+                handleAuthSuccess(user, token);
+                enqueueSnackbar(`Welcome, `, { variant: 'success' });
+            })
+            .catch((err) => {
+                const errorMessage = `${err?.message ?? err?.error ?? 'Something went wrong!'} 🙁`;
+                enqueueSnackbar(errorMessage, { variant: 'error' });
+                handleAuthFailure();
+            });
+    };
+
+    const logout = () => {
+        setAuthHeader(null);
+        setSession(null);
+        dispatch(setUser({}));
+        // navigate('/session/signin');
+        navigate('/welcome');
+    };
+
+    const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        const initialize = async () => {
+        //Reload page successfully if token is valid
+        const recoveredToken = getAccessToken();
+        if (recoveredToken) {
             try {
-                const accessToken = getAccessToken();
-                if (accessToken) {
-                    setSession(accessToken);
-                    const response = await axios.get('/login');
-                    const { user } = response.data;
-
-                    dispatch({
-                        type: 'INITIALIZE',
-                        payload: {
-                            isAuthenticated: true,
-                            user
-                        }
-                    });
+                const decodeRecoveredToken = jwtDecode(recoveredToken);
+                const { sub } = decodeRecoveredToken;
+                const principal = { sub };
+                if (principal) {
+                    handleAuthSuccess(principal, recoveredToken, true);
                 } else {
-                    dispatch({
-                        type: 'INITIALIZE',
-                        payload: {
-                            isAuthenticated: false,
-                            user: null
-                        }
-                    });
+                    handleAuthFailure();
                 }
             } catch (err) {
-                console.error(err);
-                dispatch({
-                    type: 'INITIALIZE',
-                    payload: {
-                        isAuthenticated: false,
-                        user: null
-                    }
-                });
+                handleAuthFailure();
             }
-        };
-        initialize().then((res) => console.log('from JWTAuthContext >>>', res));
+        } else handleAuthFailure();
     }, []);
-
-    const login = async (email, password) => {
-        try {
-            const response = await axios.post('/login', { email, password });
-            const { accessToken, user } = response.data;
-
-            setSession(accessToken);
-            navigate('/dashboard/default');
-            dispatch({
-                type: 'LOGIN',
-                payload: {
-                    user
-                }
-            });
-        } catch (err) {
-            console.error(err);
-            navigate('/session/signin');
-        }
-    };
-
-    const logout = async () => {
-        setSession(null);
-        navigate('/session/signin');
-        dispatch({
-            type: 'LOGOUT'
-        });
-    };
-
-    const register = async (email, firstName, lastName, password) => {
-        const response = await axios.post('/signup', { email, firstName, lastName, password });
-        const { accessToken, user } = response.data;
-        setAccessToken(accessToken);
-        dispatch({
-            type: 'REGISTER',
-            payload: {
-                user
-            }
-        });
-    };
-
-    const dispatchUser = async (user) => {
-        dispatch({
-            type: 'LOGIN',
-            payload: {
-                user
-            }
-        });
-    };
 
     return (
         <AuthContext.Provider
             value={{
-                ...state,
                 method: 'JWT',
                 login,
                 logout,
-                register,
-                dispatchUser
+                user,
+                isAuthenticated,
+                loading
             }}
         >
             {children}
@@ -168,7 +103,4 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-AuthProvider.protoType = {
-    children: PropTypes.node
-};
 export default AuthContext;

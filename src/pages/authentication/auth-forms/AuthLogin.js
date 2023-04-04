@@ -15,12 +15,12 @@ const AuthLogin = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const loginSchema = yup.object().shape({
-        email: yup.string().email('Must be a valid email').required('Email is required'),
+        username: yup.string().required('username is required'),
         password: yup.string().required('Password is required')
     });
 
-    const handleLogin = ({ email, password }) => {
-        login({ email, password }).then(() => {
+    const handleLogin = ({ username, password }) => {
+        login({ username, password }).then(() => {
             enqueueSnackbar('Login successful', {
                 variant: 'success',
                 anchorOrigin: { vertical: 'top', horizontal: 'center' },
@@ -41,7 +41,12 @@ const AuthLogin = () => {
     }, []);
 
     return (
-        <Formik initialValues={{ email: '', password: '' }} onSubmit={handleLogin} enableReinitialize={true} validationSchema={loginSchema}>
+        <Formik
+            initialValues={{ username: '', password: '' }}
+            onSubmit={handleLogin}
+            enableReinitialize={true}
+            validationSchema={loginSchema}
+        >
             {({ values, errors, touched, handleChange, handleBlur, handleSubmit, submitCount }) => {
                 const getProps = (name) => {
                     return {
@@ -61,7 +66,7 @@ const AuthLogin = () => {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
-                                <TextField id="email" label="Email" {...getProps('email')} />
+                                <TextField id="username" label="Username" {...getProps('username')} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
