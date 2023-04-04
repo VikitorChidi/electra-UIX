@@ -1,12 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-
-// assets
-import { EditOutlined, ProfileOutlined, LogoutOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
+import { EditOutlined, ProfileOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
+import { Logout } from '@mui/icons-material';
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
 
@@ -47,7 +44,7 @@ const ProfileTab = ({ handleLogout }) => {
             </ListItemButton>
             <ListItemButton selected={selectedIndex === 2} onClick={handleLogout}>
                 <ListItemIcon>
-                    <LogoutOutlined />
+                    <Logout />
                 </ListItemIcon>
                 <ListItemText primary="Logout" />
             </ListItemButton>

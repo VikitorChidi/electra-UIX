@@ -1,5 +1,7 @@
 const enJson = {
-    hello: 'Hello',
-    world: 'World'
+    app_name: 'Elektra',
+    landing_page: {
+        title: 'Welcome'
+    }
 };
 export default enJson;

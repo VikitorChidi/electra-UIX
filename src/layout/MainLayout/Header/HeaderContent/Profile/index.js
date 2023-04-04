@@ -1,10 +1,7 @@
 import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import {
-    Avatar,
     Box,
     ButtonBase,
     CardContent,
@@ -18,16 +15,13 @@ import {
     Tabs,
     Typography
 } from '@mui/material';
-
-// project import
 import MainCard from 'components/MainCard';
 import Transitions from 'components/@extended/Transitions';
 import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
-
-// assets
-import avatar1 from 'assets/images/users/avatar-1.png';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { SettingOutlined, UserOutlined } from '@ant-design/icons';
+import useAuth from '../../../../../hook/useAuth';
+import { Logout } from '@mui/icons-material';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -55,10 +49,12 @@ function a11yProps(index) {
 
 const Profile = () => {
     const theme = useTheme();
+    const { user, logout } = useAuth();
 
-    const handleLogout = async () => {
-        // logout
-    };
+    // const handleLogout = async () => {
+    //     // logout
+    //     await logout();
+    // };
 
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
@@ -74,6 +70,7 @@ const Profile = () => {
     };
 
     const [value, setValue] = useState(0);
+    const { sub } = user;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -97,7 +94,7 @@ const Profile = () => {
                 onClick={handleToggle}
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
-                    <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                    {/*<Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />*/}
                     <Typography variant="subtitle1">John Doe</Typography>
                 </Stack>
             </ButtonBase>
@@ -139,18 +136,18 @@ const Profile = () => {
                                             <Grid container justifyContent="space-between" alignItems="center">
                                                 <Grid item>
                                                     <Stack direction="row" spacing={1.25} alignItems="center">
-                                                        <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
+                                                        {/*<Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />*/}
                                                         <Stack>
                                                             <Typography variant="h6">John Doe</Typography>
                                                             <Typography variant="body2" color="textSecondary">
-                                                                UI/UX Designer
+                                                                {sub}
                                                             </Typography>
                                                         </Stack>
                                                     </Stack>
                                                 </Grid>
                                                 <Grid item>
-                                                    <IconButton size="large" color="secondary" onClick={handleLogout}>
-                                                        <LogoutOutlined />
+                                                    <IconButton size="large" color="secondary" onClick={logout}>
+                                                        <Logout />
                                                     </IconButton>
                                                 </Grid>
                                             </Grid>
@@ -191,7 +188,7 @@ const Profile = () => {
                                                     </Tabs>
                                                 </Box>
                                                 <TabPanel value={value} index={0} dir={theme.direction}>
-                                                    <ProfileTab handleLogout={handleLogout} />
+                                                    <ProfileTab handleLogout={logout} />
                                                 </TabPanel>
                                                 <TabPanel value={value} index={1} dir={theme.direction}>
                                                     <SettingTab />

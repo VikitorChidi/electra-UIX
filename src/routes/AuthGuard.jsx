@@ -11,7 +11,7 @@ const AuthGuard = ({ children }) => {
         if (!isInitialized && !isAuthenticated) navigate('/welcome');
     }, [isInitialized, isAuthenticated, user]);
 
-    return <>{isInitialized && isAuthenticated && children}</>;
+    return <>{isInitialized || (isAuthenticated && children)}</>;
 };
 
 export default AuthGuard;

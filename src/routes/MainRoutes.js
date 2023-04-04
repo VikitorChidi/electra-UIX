@@ -9,7 +9,7 @@ const MainRoutes = {
     element: <MainLayout />,
     children: [
         {
-            path: '/',
+            path: '/S',
             element: <DashboardDefault />
         },
         {

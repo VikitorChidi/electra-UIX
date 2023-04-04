@@ -37,7 +37,8 @@ export const AuthProvider = ({ children }) => {
         dispatch(setLoading(false));
         dispatch(setAuthenticated(false));
         setAuthHeader(null);
-        if (toWelcomeRoute) navigate('/welcome');
+        // if (toWelcomeRoute) navigate('/welcome');
+        if (toWelcomeRoute) navigate('/session/signin');
     };
 
     const login = ({ username, password }) => {
@@ -62,8 +63,8 @@ export const AuthProvider = ({ children }) => {
         setAuthHeader(null);
         setSession(null);
         dispatch(setUser({}));
-        // navigate('/session/signin');
-        navigate('/welcome');
+        navigate('/session/signin');
+        // navigate('/welcome');
     };
 
     const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
