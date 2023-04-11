@@ -10,14 +10,14 @@ const Footer = () => {
                     color: 'white',
                     backgroundColor: 'black',
                     width: '100%',
-                    px: 10,
-                    py: 10
+                    px: 5,
+                    py: 5
                 }}
             >
                 <Grid container direction="row" spacing={10} alignItems="baseline" justifyContent="center">
                     <Grid item>
                         <Stack spacing={1}>
-                            <CardMedia sx={{ height: 30 }} image={`${process.env.PUBLIC_URL + '/assets/logo1.png'}`} />
+                            <CardMedia sx={{ height: 40 }} image={`${process.env.PUBLIC_URL + '/assets/logo1.png'}`} />
                             <Typography
                                 variant="h6"
                                 sx={{

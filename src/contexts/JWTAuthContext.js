@@ -34,12 +34,12 @@ export const AuthProvider = ({ children }) => {
         if (toDashboard) navigate('/dashboard/default');
     };
 
-    const handleAuthFailure = (toWelcomeRoute = true) => {
+    const handleAuthFailure = (toWelcome = true) => {
         dispatch(setLoading(false));
         dispatch(setAuthenticated(false));
         setAuthHeader(null);
-        if (toWelcomeRoute) navigate('/welcome');
-        // if (toWelcomeRoute) navigate('/session/signin');
+        console.log('failed to signin');
+        if (toWelcome) navigate('/welcome');
     };
 
     const login = ({ username, password }) => {
@@ -77,7 +77,6 @@ export const AuthProvider = ({ children }) => {
         setAuthHeader(null);
         setSession(null);
         dispatch(setUser({}));
-        // navigate('/session/signin');
         navigate('/welcome');
     };
 

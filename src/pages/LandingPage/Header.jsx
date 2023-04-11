@@ -1,7 +1,8 @@
 import React from 'react';
-import { AppBar, Box, Collapse, IconButton, styled, Toolbar, Typography } from '@mui/material';
-import { ExpandMore, Sort } from '@material-ui/icons';
+import { AppBar, Box, Button, Collapse, IconButton, styled, Toolbar, Tooltip, Typography } from '@mui/material';
+import { ExpandMore } from '@material-ui/icons';
 import { Link as Scroll } from 'react-scroll';
+import { useNavigate } from 'react-router';
 
 export const AppBarWrapper = styled(AppBar)(
     ({ theme }) => `
@@ -11,6 +12,8 @@ export const AppBarWrapper = styled(AppBar)(
 
 const Header = () => {
     const [checked, setChecked] = React.useState(false);
+    const navigate = useNavigate();
+
     React.useEffect(() => {
         setChecked(true);
     }, []);
@@ -22,15 +25,33 @@ const Header = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    height: '100vh'
+                    height: '80vh'
                 }}
             >
                 <AppBarWrapper elevation={0}>
                     <Toolbar sx={{ width: '80%', margin: '0 auto' }}>
                         <Typography sx={{ flexGrow: 1, color: '#344767', fontSize: '1rem', fontWeight: 600 }}>Elektra Registrar</Typography>
-                        <IconButton>
-                            <Sort style={{ color: '#FFF', fontSize: '2rem' }} />
-                        </IconButton>
+                        {/*<IconButton>*/}
+                        {/*    <Sort style={{ color: '#FFF', fontSize: '2rem' }} />*/}
+                        {/*</IconButton>*/}
+                        <Tooltip title="Signin" arrow>
+                            <Button
+                                variant="text"
+                                sx={{ fontWeight: 600, fontSize: '1rem', color: '#344767' }}
+                                onClick={() => navigate('/session/signin')}
+                            >
+                                Signin
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Signup" arrow>
+                            <Button
+                                variant="text"
+                                sx={{ fontWeight: 600, fontSize: '1rem', color: '#344767' }}
+                                onClick={() => navigate('/session/signup')}
+                            >
+                                Signup
+                            </Button>
+                        </Tooltip>
                     </Toolbar>
                 </AppBarWrapper>
                 <Collapse in={checked} collapsedSize={50} {...(checked ? { timeout: 1000 } : {})}>
@@ -48,7 +69,7 @@ const Header = () => {
                         </Typography>
                         <Scroll to="place-to-visit" smooth={true}>
                             <IconButton>
-                                <ExpandMore style={{ color: '#FFF', fontSize: '4rem' }} />
+                                <ExpandMore style={{ color: '#344767', fontSize: '4rem' }} />
                             </IconButton>
                         </Scroll>
                     </Box>
