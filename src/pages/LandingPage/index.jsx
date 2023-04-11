@@ -1,9 +1,19 @@
 import useAuth from '../../hook/useAuth';
-import { HeaderWrapper, OverviewWrapper } from './landingPageWrappers';
-import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import { Container, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Box, styled } from '@mui/material';
+import { Helmet } from 'react-helmet-async';
+import Header from './Header';
+import PlaceToVisit from './PlaceToVisit';
+import Footer from './Footer';
+
+export const LandingPageWrapper = styled(Box)(
+    ({ theme }) => `
+    min-height: 100vh;
+    background-image: url(${process.env.PUBLIC_URL + '/assets/bg3.jpg'});
+    background-repeat: no-repeat;
+    background-size: cover;
+   `
+);
 
 const LandingPage = () => {
     const { isInitialized, isAuthenticated, user } = useAuth();
@@ -11,21 +21,14 @@ const LandingPage = () => {
 
     return (
         <>
-            <OverviewWrapper>
+            <LandingPageWrapper>
                 <Helmet>
                     <title>Welcome to Elektra</title>
                 </Helmet>
-                <HeaderWrapper>
-                    <Container maxWidth="lg">
-                        <Box display="flex" alignItems="center">
-                            <Typography>Elektra</Typography>
-                        </Box>
-                    </Container>
-                </HeaderWrapper>
-                <Box>
-                    <div>Welcome to Elektra</div>
-                </Box>
-            </OverviewWrapper>
+                <Header />
+                <PlaceToVisit />
+                <Footer />
+            </LandingPageWrapper>
         </>
     );
 };

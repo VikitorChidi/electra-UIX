@@ -70,7 +70,7 @@ const Profile = () => {
     };
 
     const [value, setValue] = useState(0);
-    const { sub } = user;
+    const { email, firstName, lastName } = user;
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -95,7 +95,7 @@ const Profile = () => {
             >
                 <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
                     {/*<Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />*/}
-                    <Typography variant="subtitle1">John Doe</Typography>
+                    <Typography variant="subtitle1">{`${firstName} ${lastName}`}</Typography>
                 </Stack>
             </ButtonBase>
             <Popper
@@ -138,9 +138,9 @@ const Profile = () => {
                                                     <Stack direction="row" spacing={1.25} alignItems="center">
                                                         {/*<Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />*/}
                                                         <Stack>
-                                                            <Typography variant="h6">John Doe</Typography>
+                                                            <Typography variant="h6">{`${firstName} ${lastName}`} </Typography>
                                                             <Typography variant="body2" color="textSecondary">
-                                                                {sub}
+                                                                {`${email}`}
                                                             </Typography>
                                                         </Stack>
                                                     </Stack>

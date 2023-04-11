@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import useClosableSnackbar from '../hook/useClosableSnackbar';
 import { setAuthenticated, setLoading, setUser } from '../store/reducers/auth';
 import { getAccessToken, setSession } from '../config/token';
-import { loginAuth } from '../pages/authentication/authService';
+import { loginAuth, registerAuth } from '../pages/authentication/authService';
 import jwtDecode from 'jwt-decode';
 
 export const setAuthHeader = (token) => {
@@ -16,6 +16,7 @@ export const setAuthHeader = (token) => {
 const AuthContext = createContext({
     method: 'JWT',
     login: () => Promise.resolve(),
+    register: () => Promise.resolve(),
     logout: {}
 });
 
@@ -37,8 +38,8 @@ export const AuthProvider = ({ children }) => {
         dispatch(setLoading(false));
         dispatch(setAuthenticated(false));
         setAuthHeader(null);
-        // if (toWelcomeRoute) navigate('/welcome');
-        if (toWelcomeRoute) navigate('/session/signin');
+        if (toWelcomeRoute) navigate('/welcome');
+        // if (toWelcomeRoute) navigate('/session/signin');
     };
 
     const login = ({ username, password }) => {
@@ -47,10 +48,9 @@ export const AuthProvider = ({ children }) => {
             .then((res) => {
                 const { token } = res.data;
                 const decodedToken = jwtDecode(token);
-                const { sub } = decodedToken;
-                const user = { sub };
+                const user = { ...decodedToken };
                 handleAuthSuccess(user, token);
-                enqueueSnackbar(`Welcome, `, { variant: 'success' });
+                enqueueSnackbar(`Welcome, ${user.firstName}`, { variant: 'success' });
             })
             .catch((err) => {
                 const errorMessage = `${err?.message ?? err?.error ?? 'Something went wrong!'} 🙁`;
@@ -59,12 +59,26 @@ export const AuthProvider = ({ children }) => {
             });
     };
 
+    const register = (payload) => {
+        dispatch(setLoading(true));
+        registerAuth(payload)
+            .then((res) => {
+                dispatch(setLoading(false));
+                console.log(res);
+                navigate('/session/signin');
+            })
+            .catch((err) => {
+                console.warn(err);
+                dispatch(setLoading(false));
+            });
+    };
+
     const logout = () => {
         setAuthHeader(null);
         setSession(null);
         dispatch(setUser({}));
-        navigate('/session/signin');
-        // navigate('/welcome');
+        // navigate('/session/signin');
+        navigate('/welcome');
     };
 
     const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
@@ -75,8 +89,8 @@ export const AuthProvider = ({ children }) => {
         if (recoveredToken) {
             try {
                 const decodeRecoveredToken = jwtDecode(recoveredToken);
-                const { sub } = decodeRecoveredToken;
-                const principal = { sub };
+                const { email, firstName, lastName } = decodeRecoveredToken;
+                const principal = { email, firstName, lastName };
                 if (principal) {
                     handleAuthSuccess(principal, recoveredToken, true);
                 } else {
@@ -94,6 +108,7 @@ export const AuthProvider = ({ children }) => {
                 method: 'JWT',
                 login,
                 logout,
+                register,
                 user,
                 isAuthenticated,
                 loading
