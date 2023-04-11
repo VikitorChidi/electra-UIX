@@ -1,9 +1,4 @@
-import { Box, Grid, Stack, styled, Typography } from '@mui/material';
-
-const Item = styled(Box)(({ theme }) => ({
-    ...theme.typography.body2,
-    padding: theme.spacing(1)
-}));
+import { Box, CardMedia, Grid, Stack, Typography } from '@mui/material';
 
 const Footer = () => {
     return (
@@ -21,9 +16,17 @@ const Footer = () => {
             >
                 <Grid container direction="row" spacing={10} alignItems="baseline" justifyContent="center">
                     <Grid item>
-                        <Stack>
-                            {/*<Box component="img" src={`${process.env.PUBLIC_URL + '/assets/logo1.jpg'}`} />*/}
-                            <Typography variant="h3" sx={{ color: '#FFF' }}>
+                        <Stack spacing={1}>
+                            <CardMedia sx={{ height: 30 }} image={`${process.env.PUBLIC_URL + '/assets/logo1.png'}`} />
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    color: '#FFF',
+                                    fontWeight: '600 !important',
+                                    fontSize: '1rem',
+                                    lineHeight: 1.625
+                                }}
+                            >
                                 Elektra Registrar
                             </Typography>
                         </Stack>

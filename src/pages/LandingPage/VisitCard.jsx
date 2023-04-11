@@ -3,22 +3,24 @@ import { Box, Button, Card, Collapse, Typography } from '@mui/material';
 import { ArrowForward } from '@material-ui/icons';
 import { useNavigate } from 'react-router';
 
-const VisitCard = ({ details, checked }) => {
+const VisitCard = ({ details, checked, cardBgColor }) => {
     const navigate = useNavigate();
 
     return (
-        <Collapse in={checked} {...(checked ? { timeout: 2000 } : {})}>
+        <Collapse in={checked} {...(checked ? { timeout: 1000 } : {})}>
             <Card
                 sx={{
                     maxWidth: 345,
                     minWidth: 345,
+                    minHeight: 345,
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'baseline',
                     textAlign: 'left',
                     borderRadius: '1rem',
                     p: 2,
-                    m: 2
+                    m: 2,
+                    backgroundImage: cardBgColor
                 }}
             >
                 <Box sx={{ mr: 1 }}>{details?.icon}</Box>
@@ -41,7 +43,7 @@ const VisitCard = ({ details, checked }) => {
                         endIcon={<ArrowForward />}
                         onClick={() => navigate(details?.navigateTo)}
                     >
-                        Read more
+                        {details?.buttonLabel}
                     </Button>
                 </Box>
             </Card>

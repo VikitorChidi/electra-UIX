@@ -27,13 +27,13 @@ const Header = () => {
             >
                 <AppBarWrapper elevation={0}>
                     <Toolbar sx={{ width: '80%', margin: '0 auto' }}>
-                        <Typography sx={{ flexGrow: 1, color: '#344767' }}>Elektra Registrar</Typography>
+                        <Typography sx={{ flexGrow: 1, color: '#344767', fontSize: '1rem', fontWeight: 600 }}>Elektra Registrar</Typography>
                         <IconButton>
                             <Sort style={{ color: '#FFF', fontSize: '2rem' }} />
                         </IconButton>
                     </Toolbar>
                 </AppBarWrapper>
-                <Collapse in={checked} collapsedSize={50} {...(checked ? { timeout: 2000 } : {})}>
+                <Collapse in={checked} collapsedSize={50} {...(checked ? { timeout: 1000 } : {})}>
                     <Box
                         sx={{
                             textAlign: 'center'

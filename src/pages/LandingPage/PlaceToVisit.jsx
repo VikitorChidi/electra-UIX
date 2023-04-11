@@ -21,6 +21,8 @@ const PlaceToVisit = () => {
         <>
             <RootWrapper id="place-to-visit">
                 <VisitCard details={cardDetails[0]} checked={checked} />
+                <VisitCard details={cardDetails[1]} checked={checked} />
+                <VisitCard details={cardDetails[2]} checked={checked} />
             </RootWrapper>
         </>
     );
