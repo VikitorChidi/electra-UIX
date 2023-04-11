@@ -39,10 +39,10 @@ const Header = () => {
                             textAlign: 'center'
                         }}
                     >
-                        <Typography variant="h1" sx={{ color: '#FFF' }}>
+                        <Typography variant="h1" sx={{ color: '#344767' }}>
                             Elektra Registrar
                         </Typography>
-                        <Typography variant={'h4'} sx={{ color: '#FFF', mb: 2 }}>
+                        <Typography variant={'subtitle1'} sx={{ color: '#344767', mb: 2, fontWeight: 600, fontSize: '1rem' }}>
                             Elektra Registrar is a web product that provide licences to use other digital products developed by <br />{' '}
                             Syntechsys Register as a company or Individual in other to benefit from this resources provided by Syntechsys.
                         </Typography>
