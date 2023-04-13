@@ -17,7 +17,6 @@ const AuthRegister = () => {
     const { register } = useAuth();
 
     const handleRegistrationSubmission = async (values, formikBag) => {
-        console.log('values >>> ', values);
         formikBag.setSubmitting(true);
         try {
             await register(values);
@@ -167,7 +166,7 @@ const AuthRegister = () => {
                                 size="medium"
                                 type="submit"
                                 variant="contained"
-                                color="primary"
+                                color={isSubmitting ? 'blue' : 'primary'}
                             >
                                 {isSubmitting ? 'Creating...' : 'Create Account'}
                             </Button>
