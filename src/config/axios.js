@@ -5,7 +5,7 @@ import { getAccessToken, isValidToken } from './token';
 const history = createBrowserHistory();
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_BASE_ADDRESS,
-    withCredentials: false,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
