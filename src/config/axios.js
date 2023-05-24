@@ -5,7 +5,11 @@ import { getAccessToken, isValidToken } from './token';
 const history = createBrowserHistory();
 const axiosInstance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_BASE_ADDRESS,
-    withCredentials: true
+    withCredentials: false,
+    headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+    }
 });
 
 const successInterceptor = (response) => response;
