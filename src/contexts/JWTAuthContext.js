@@ -38,7 +38,6 @@ export const AuthProvider = ({ children }) => {
         dispatch(setLoading(false));
         dispatch(setAuthenticated(false));
         setAuthHeader(null);
-        console.log('failed to signin');
         if (toWelcome) navigate('/welcome');
     };
 
@@ -64,7 +63,6 @@ export const AuthProvider = ({ children }) => {
         registerAuth(payload)
             .then((res) => {
                 dispatch(setLoading(false));
-                console.log(res);
                 navigate('/session/signin');
             })
             .catch((err) => {
